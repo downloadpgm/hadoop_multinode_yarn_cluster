@@ -1,4 +1,4 @@
-# Spark client running into YARN cluster in Docker
+# Hadoop running into YARN cluster in Docker
 
 Apache Hadoop YARN is a resource management and job scheduling technology in the open source Hadoop distributed processing framework.
 This Docker image contains Hadoop binaries prebuilt and uploaded in Docker Hub.
