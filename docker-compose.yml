@@ -5,7 +5,7 @@ services:
     image: mkenjis/ubhdpclu_img
     networks:
       - mynet
-    environments:
+    environment:
       - HADOOP_HOST_SLAVES=hdp1,hdp2,hdp3
     depends_on:
       - hdp1,hdp2,hdp3
