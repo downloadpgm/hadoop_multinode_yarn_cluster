@@ -69,7 +69,6 @@ $ docker container exec -it <container ID> bash
 Inside the Hadoop master container, check your HDFS service
 ```shell
 $ hdfs dfsadmin -report
-21/12/06 17:48:31 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Configured Capacity: 15000010752 (13.97 GB)
 Present Capacity: 11198918656 (10.43 GB)
 DFS Remaining: 11198906368 (10.43 GB)
@@ -138,11 +137,8 @@ Last contact: Mon Dec 06 17:48:32 CST 2021
 Create a directory in HDFS filesystem and copy text files in this directory
 ```shell
 $ hdfs dfs -ls /
-21/12/06 17:49:31 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 $ hdfs dfs -mkdir /data
-21/12/06 17:49:45 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 $ hdfs dfs -ls /
-21/12/06 17:49:51 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Found 1 items
 drwxr-xr-x   - root supergroup          0 2021-12-06 17:49 /data
 $ cd $HADOOP_HOME   # it changes to /usr/local/hadoop-2.7.3
@@ -160,9 +156,7 @@ drwxr-xr-x 2 root root   327 Dec  6 17:47 logs
 drwxr-xr-x 2 root root  4096 Aug 17  2016 sbin
 drwxr-xr-x 4 root root    31 Aug 17  2016 share
 $ hdfs dfs -put *.txt /data
-21/12/06 17:50:28 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 $ hdfs dfs -ls /data
-21/12/06 17:50:42 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Found 3 items
 -rw-r--r--   2 root supergroup      84854 2021-12-06 17:50 /data/LICENSE.txt
 -rw-r--r--   2 root supergroup      14978 2021-12-06 17:50 /data/NOTICE.txt
@@ -265,22 +259,15 @@ packageJobJar: [mapper.py, reducer.py, /tmp/hadoop-unjar4647696537138809119/] []
 Finally, HDFS dfs-cat/ooxx/output/part-00000 is executed to view the output results.
 ```shell
 $ hdfs dfs -ls /                  
-21/12/06 18:02:03 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Found 3 items
 drwxr-xr-x   - root supergroup          0 2021-12-06 17:50 /data
 drwxr-xr-x   - root supergroup          0 2021-12-06 17:57 /result
 drwx------   - root supergroup          0 2021-12-06 17:57 /tmp
 $ hdfs dfs -ls /result
-21/12/06 18:02:15 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Found 2 items
 -rw-r--r--   2 root supergroup          0 2021-12-06 17:57 /result/_SUCCESS
 -rw-r--r--   2 root supergroup      30052 2021-12-06 17:57 /result/part-00000
-root@3895ee795371:~# hdfs dfs -cat /result/part-00000 | head 20
-head: cannot open '20' for reading: No such file or directory
-21/12/06 18:02:26 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-cat: Unable to write to output stream.
 $ hdfs dfs -cat /result/part-00000 | head -20
-21/12/06 18:02:33 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 ""AS    2
 "AS     17
 "COPYRIGHTS     1
