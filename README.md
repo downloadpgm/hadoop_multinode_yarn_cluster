@@ -1,7 +1,26 @@
-# Hadoop running into YARN cluster in Docker
+# Hadoop running in YARN cluster in Docker
 
 Apache Hadoop YARN is a resource management and job scheduling technology in the open source Hadoop distributed processing framework.
 This Docker image contains Hadoop binaries prebuilt and uploaded in Docker Hub.
+
+## Steps to Build Hadoop image
+
+To build an image to run this YARN cluster, follow the steps below :
+```shell
+$ git clone https://github.com/mkenjis/apache_binaries
+$ wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
+$ docker image build -t mkenjis/ubhdpclu_img
+$ docker login
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: mkenjis
+Password: 
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+$ docker image push mkenjis/ubhdpclu_img
+```
 
 ## Shell Scripts Inside 
 
@@ -256,7 +275,7 @@ packageJobJar: [mapper.py, reducer.py, /tmp/hadoop-unjar4647696537138809119/] []
 21/12/06 17:57:41 INFO streaming.StreamJob: Output directory: /result
 ```
 
-Finally, HDFS dfs-cat/ooxx/output/part-00000 is executed to view the output results.
+Finally, HDFS result/part-00000 is executed to view the output results.
 ```shell
 $ hdfs dfs -ls /                  
 Found 3 items
