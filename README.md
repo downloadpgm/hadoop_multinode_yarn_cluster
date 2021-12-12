@@ -1,6 +1,7 @@
 # Hadoop running in YARN cluster in Docker
 
 Apache Hadoop YARN is a resource management and job scheduling technology in the open source Hadoop distributed processing framework.
+
 This Docker image contains Hadoop binaries prebuilt and uploaded in Docker Hub.
 
 ## Steps to Build Hadoop image
@@ -27,7 +28,7 @@ $ docker image push mkenjis/ubhdpclu_img
 > run_hadoop.sh
 
 Sets up the environment for the YARN cluster by executing the following steps :
-- sets environment variables for HADOOP and YARN
+- sets environment variables for JAVA and HADOOP
 - starts the SSH service and scans the slave nodes for passwordless SSH
 - copies the Hadoop configuration files to slave nodes
 - initializes the HDFS filesystem
@@ -36,7 +37,7 @@ Sets up the environment for the YARN cluster by executing the following steps :
 
 > create_conf_files.sh
 
-Creates the following Hadoop files $HADOOP/etc/hadoop directory :
+Creates the following Hadoop files $HADOOP_HOME/etc/hadoop directory :
 - core-site.xml
 - hdfs-site.xml
 - mapred-site.xml
