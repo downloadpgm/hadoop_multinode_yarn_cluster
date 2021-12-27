@@ -5,8 +5,6 @@ Apache Hadoop YARN is a resource management and job scheduling technology in the
 This Docker image contains Hadoop binaries prebuilt and uploaded in Docker Hub.
 
 ## Steps to Build Hadoop image
-
-To build an image to run this YARN cluster, follow the steps below :
 ```shell
 $ git clone https://github.com/mkenjis/apache_binaries
 $ wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
@@ -58,31 +56,32 @@ To add a worker to this swarm, run the following command:
 To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
 ```
 
-Add more workers in two or more hosts (node2, node3, ...) by joining them to manager running the following command in each node.
+Add more workers in cluster hosts (node2, node3, ...) by joining them to manager.
 ```shell
 $ docker swarm join --token <token> <IP node1>:2377
 ```
 
-Change the workers as managers in node2, node3, ... running the following in node1.
+Change the workers as managers in node2, node3, ...
 ```shell
 $ docker node promote node2
 $ docker node promote node3
 $ docker node promote ...
 ```
 
-Start the YARN cluster by creating a Docker stack 
+Start Docker stack using docker-compose.yml 
 ```shell
 $ docker stack deploy -c docker-compose.yml hadoop
 ```
 
 ## Running a MapReduce Example
 
-Identify which Docker container started as Hadoop master and run the following docker exec command
+Identify which Docker container started as Hadoop master and logged into it
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the Hadoop master constainer
 CONTAINER ID   IMAGE                         COMMAND                  CREATED              STATUS              PORTS      NAMES
 d723786ae3e0   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   hadoop_hdp3.1.pmvvdxosgi2dkz7m8vi3i0x8t
 3895ee795371   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   hadoop_hdpmst.1.j04grga7ioelyt1vtr26h3fmr
+
 $ docker container exec -it <container ID> bash
 ```
 
