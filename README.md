@@ -9,15 +9,7 @@ This Docker image contains Hadoop binaries prebuilt and uploaded in Docker Hub.
 $ git clone https://github.com/mkenjis/apache_binaries
 $ wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 $ docker image build -t mkenjis/ubhdpclu_img
-$ docker login
-Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
-Username: mkenjis
-Password: 
-WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
-Configure a credential helper to remove this warning. See
-https://docs.docker.com/engine/reference/commandline/login/#credentials-store
-
-Login Succeeded
+$ docker login   # provide user and password
 $ docker image push mkenjis/ubhdpclu_img
 ```
 
@@ -42,50 +34,41 @@ Creates the following Hadoop files $HADOOP_HOME/etc/hadoop directory :
 - yarn-site.xml
 - hadoop-env.sh
 
-## Initial Steps on Docker Swarm
+## Start Swarm cluster
 
-To start with, start Swarm mode in Docker in node1
+1. start swarm mode in node1
 ```shell
-$ docker swarm init
-Swarm initialized: current node (xv7mhbt8ncn6i9iwhy8ysemik) is now a manager.
-
-To add a worker to this swarm, run the following command:
-
-    docker swarm join --token <token> <IP node1>:2377
-
-To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+$ docker swarm init --advertise-addr <IP node1>
+$ docker swarm join-token manager  # issue a token to add a node as manager to swarm
 ```
 
-Add more workers in cluster hosts (node2, node3, ...) by joining them to manager.
+2. add more managers in swarm cluster (node2, node3, ...)
 ```shell
-$ docker swarm join --token <token> <IP node1>:2377
+$ docker swarm join --token <token> <IP nodeN>:2377
 ```
 
-Change the workers as managers in node2, node3, ...
+3. start a hadoop namenode and datanodes 
 ```shell
-$ docker node promote node2
-$ docker node promote node3
-$ docker node promote ...
+$ docker stack deploy -c docker-compose.yml spark
+$ docker service ls
+ID             NAME             MODE         REPLICAS   IMAGE                             PORTS
+t3s7ud9u21hr   spark_spk_mst    replicated   1/1        mkenjis/ubpyspk_img:latest   
+mi3w7xvf9vyt   spark_spk_wkr1   replicated   1/1        mkenjis/ubpyspk_img:latest   
+xlg5ww9q0v6j   spark_spk_wkr2   replicated   1/1        mkenjis/ubpyspk_img:latest   
+ni5xrb60u71i   spark_spk_wkr3   replicated   1/1        mkenjis/ubpyspk_img:latest
 ```
 
-Start Docker stack using docker-compose.yml 
+4. access hadoop master node
 ```shell
-$ docker stack deploy -c docker-compose.yml hadoop
-```
-
-## Running a MapReduce Example
-
-Identify which Docker container started as Hadoop master and logged into it
-```shell
-$ docker container ls   # run it in each node and check which <container ID> is running the Hadoop master constainer
+$ docker container ls   # run it in each node and check which <container ID> is running the hadoop master constainer
 CONTAINER ID   IMAGE                         COMMAND                  CREATED              STATUS              PORTS      NAMES
 d723786ae3e0   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   hadoop_hdp3.1.pmvvdxosgi2dkz7m8vi3i0x8t
 3895ee795371   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   hadoop_hdpmst.1.j04grga7ioelyt1vtr26h3fmr
 
-$ docker container exec -it <container ID> bash
+$ docker container exec -it <hdpmst ID> bash
 ```
 
-Inside the Hadoop master container, check your HDFS service
+5. access hadoop container and check HDFS service
 ```shell
 $ hdfs dfsadmin -report
 Configured Capacity: 15000010752 (13.97 GB)
@@ -153,7 +136,7 @@ Xceivers: 1
 Last contact: Mon Dec 06 17:48:32 CST 2021
 ```
 
-Create a directory in HDFS filesystem and copy text files in this directory
+6. create HDFS directory and copy files in this directory
 ```shell
 $ hdfs dfs -ls /
 $ hdfs dfs -mkdir /data
@@ -182,7 +165,7 @@ Found 3 items
 -rw-r--r--   2 root supergroup       1366 2021-12-06 17:50 /data/README.txt
 ```
 
-Copy the mapper and reducer Python scripts and find 
+7. copy mapper and reducer Python scripts
 ```shell
 $ cd ~  # return to home directory
 $ vi mapper.py
@@ -195,7 +178,7 @@ $ find $HADOOP_HOME -name '*streaming*'
 /usr/local/hadoop-2.7.3/share/hadoop/tools/sources/hadoop-streaming-2.7.3-test-sources.jar
 ```
 
-Run the wordcount of Mapreduce implemented by Python
+8. run the wordcount mapreduce example
 ```shell
 $ hadoop jar /usr/local/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file mapper.py -mapper mapper.py -file reducer.py -reducer reducer.py -input /data -output /result
 21/12/06 17:57:07 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
@@ -275,7 +258,7 @@ packageJobJar: [mapper.py, reducer.py, /tmp/hadoop-unjar4647696537138809119/] []
 21/12/06 17:57:41 INFO streaming.StreamJob: Output directory: /result
 ```
 
-Finally, HDFS result/part-00000 is executed to view the output results.
+9. check HDFS result/part-00000 to view the output results.
 ```shell
 $ hdfs dfs -ls /                  
 Found 3 items
