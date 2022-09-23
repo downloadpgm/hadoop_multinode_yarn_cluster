@@ -47,7 +47,7 @@ $ docker swarm join-token manager  # issue a token to add a node as manager to s
 $ docker swarm join --token <token> <IP nodeN>:2377
 ```
 
-3. start a hadoop namenode and datanodes 
+3. start hadoop namenode and datanodes 
 ```shell
 $ docker stack deploy -c docker-compose.yml spark
 $ docker service ls
