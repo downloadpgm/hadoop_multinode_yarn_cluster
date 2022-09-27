@@ -49,13 +49,13 @@ $ docker swarm join --token <token> <IP nodeN>:2377
 
 3. start hadoop namenode and datanodes 
 ```shell
-$ docker stack deploy -c docker-compose.yml spark
+$ docker stack deploy -c docker-compose.yml hdp
 $ docker service ls
 ID             NAME             MODE         REPLICAS   IMAGE                             PORTS
-t3s7ud9u21hr   spark_spk_mst    replicated   1/1        mkenjis/ubpyspk_img:latest   
-mi3w7xvf9vyt   spark_spk_wkr1   replicated   1/1        mkenjis/ubpyspk_img:latest   
-xlg5ww9q0v6j   spark_spk_wkr2   replicated   1/1        mkenjis/ubpyspk_img:latest   
-ni5xrb60u71i   spark_spk_wkr3   replicated   1/1        mkenjis/ubpyspk_img:latest
+t3s7ud9u21hr   hdp_hdpmst    replicated   1/1        mkenjis/ubhdpclu_img:latest   
+mi3w7xvf9vyt   hdp_hdp1      replicated   1/1        mkenjis/ubhdpclu_img:latest   
+xlg5ww9q0v6j   hdp_hdp2      replicated   1/1        mkenjis/ubhdpclu_img:latest   
+ni5xrb60u71i   hdp_hdp3      replicated   1/1        mkenjis/ubhdpclu_img:latest
 ```
 
 4. access hadoop master node
@@ -68,7 +68,7 @@ d723786ae3e0   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a mi
 $ docker container exec -it <hdpmst ID> bash
 ```
 
-5. access hadoop container and check HDFS service
+5. check HDFS service
 ```shell
 $ hdfs dfsadmin -report
 Configured Capacity: 15000010752 (13.97 GB)
