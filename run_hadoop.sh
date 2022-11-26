@@ -25,26 +25,29 @@ if [ -n "${HADOOP_HOST_SLAVES}" ]; then
    sleep 30
 
    create_conf_files.sh
-   
+
    >${HADOOP_CONF_DIR}/slaves
-   
+
    for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
       ssh-keyscan ${HADOOP_HOST} >~/.ssh/known_hosts
-	  scp ${HADOOP_CONF_DIR}/core-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/core-site.xml
-	  scp ${HADOOP_CONF_DIR}/hdfs-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hdfs-site.xml
-	  scp ${HADOOP_CONF_DIR}/mapred-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/mapred-site.xml
-	  scp ${HADOOP_CONF_DIR}/yarn-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/yarn-site.xml
-	  scp ${HADOOP_CONF_DIR}/hadoop-env.sh root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hadoop-env.sh
-	  
+          scp ${HADOOP_CONF_DIR}/core-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/core-site.xml
+          scp ${HADOOP_CONF_DIR}/hdfs-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hdfs-site.xml
+          scp ${HADOOP_CONF_DIR}/mapred-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/mapred-site.xml
+          scp ${HADOOP_CONF_DIR}/yarn-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/yarn-site.xml
+          scp ${HADOOP_CONF_DIR}/hadoop-env.sh root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hadoop-env.sh
+
       ssh root@${HADOOP_HOST} "cat /etc/hostname" >>${HADOOP_CONF_DIR}/slaves
    done
-   
-   for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
- 	  scp ${HADOOP_CONF_DIR}/slaves root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/slaves
-   done   
 
-   # build HDFS 
-   $HADOOP_HOME/bin/hdfs namenode -format
+   for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
+          scp ${HADOOP_CONF_DIR}/slaves root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/slaves
+   done
+
+   # if a new hadoop cluster, build a HDFS
+   # if a restart from previous hadoop cluster run, preserve HDFS
+   if [ ! -f /hadoop/hdfs/namenode/current/VERSION ]; then
+     $HADOOP_HOME/bin/hdfs namenode -format
+   fi
 
    # start HDFS and YARN services
    $HADOOP_HOME/sbin/start-dfs.sh

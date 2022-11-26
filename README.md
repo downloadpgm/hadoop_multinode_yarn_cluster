@@ -39,15 +39,23 @@ Creates the following Hadoop files $HADOOP_HOME/etc/hadoop directory :
 1. start swarm mode in node1
 ```shell
 $ docker swarm init --advertise-addr <IP node1>
-$ docker swarm join-token manager  # issue a token to add a node as manager to swarm
+$ docker swarm join-token worker  # issue a token to add a node as worker to swarm
 ```
 
-2. add more managers in swarm cluster (node2, node3, ...)
+2. add 3 more workers in swarm cluster (node2, node3, node4)
 ```shell
 $ docker swarm join --token <token> <IP nodeN>:2377
 ```
 
-3. start hadoop namenode and datanodes 
+3. label eacho node to anchor each container in swarm cluster
+```shell
+docker node update --label-add hostlabel=hdpmst node1
+docker node update --label-add hostlabel=hdp1 node2
+docker node update --label-add hostlabel=hdp2 node3
+docker node update --label-add hostlabel=hdp3 node4
+```
+
+4. start hadoop namenode and datanodes 
 ```shell
 $ docker stack deploy -c docker-compose.yml hdp
 $ docker service ls
@@ -58,7 +66,7 @@ xlg5ww9q0v6j   hdp_hdp2      replicated   1/1        mkenjis/ubhdpclu_img:latest
 ni5xrb60u71i   hdp_hdp3      replicated   1/1        mkenjis/ubhdpclu_img:latest
 ```
 
-4. access hadoop master node
+5. access hadoop master node
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the hadoop master constainer
 CONTAINER ID   IMAGE                         COMMAND                  CREATED              STATUS              PORTS      NAMES
@@ -68,7 +76,7 @@ d723786ae3e0   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a mi
 $ docker container exec -it <hdpmst ID> bash
 ```
 
-5. check HDFS service
+6. check HDFS service
 ```shell
 $ hdfs dfsadmin -report
 Configured Capacity: 15000010752 (13.97 GB)
@@ -136,7 +144,7 @@ Xceivers: 1
 Last contact: Mon Dec 06 17:48:32 CST 2021
 ```
 
-6. create HDFS directory and copy files in this directory
+7. create HDFS directory and copy files in this directory
 ```shell
 $ hdfs dfs -ls /
 $ hdfs dfs -mkdir /data
@@ -165,7 +173,7 @@ Found 3 items
 -rw-r--r--   2 root supergroup       1366 2021-12-06 17:50 /data/README.txt
 ```
 
-7. copy mapper and reducer Python scripts
+8. copy mapper and reducer Python scripts
 ```shell
 $ cd ~  # return to home directory
 $ vi mapper.py
@@ -178,7 +186,7 @@ $ find $HADOOP_HOME -name '*streaming*'
 /usr/local/hadoop-2.7.3/share/hadoop/tools/sources/hadoop-streaming-2.7.3-test-sources.jar
 ```
 
-8. run the wordcount mapreduce example
+9. run the wordcount mapreduce example
 ```shell
 $ hadoop jar /usr/local/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file mapper.py -mapper mapper.py -file reducer.py -reducer reducer.py -input /data -output /result
 21/12/06 17:57:07 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
@@ -258,7 +266,7 @@ packageJobJar: [mapper.py, reducer.py, /tmp/hadoop-unjar4647696537138809119/] []
 21/12/06 17:57:41 INFO streaming.StreamJob: Output directory: /result
 ```
 
-9. check HDFS result/part-00000 to view the output results.
+10. check HDFS result/part-00000 to view the output results.
 ```shell
 $ hdfs dfs -ls /                  
 Found 3 items

@@ -30,7 +30,11 @@ RUN echo "" >>.bashrc \
 # and creates authorized_keys to enable containers connect to each other via passwordless ssh
 RUN /usr/bin/bash -c "ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y 2>&1 >/dev/null" \
  && cp .ssh/id_rsa.pub .ssh/authorized_keys
- 
+
+# declare the Hadoop name and data directories to be exported
+VOLUME /hadoop/hdfs/namenode
+VOLUME /hadoop/hdfs/datanode
+
 COPY create_conf_files.sh .
 RUN chmod +x create_conf_files.sh
 
