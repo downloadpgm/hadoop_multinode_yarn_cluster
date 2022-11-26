@@ -60,18 +60,18 @@ docker node update --label-add hostlabel=hdp3 node4
 $ docker stack deploy -c docker-compose.yml hdp
 $ docker service ls
 ID             NAME             MODE         REPLICAS   IMAGE                             PORTS
-t3s7ud9u21hr   hdp_hdpmst    replicated   1/1        mkenjis/ubhdpclu_img:latest   
-mi3w7xvf9vyt   hdp_hdp1      replicated   1/1        mkenjis/ubhdpclu_img:latest   
-xlg5ww9q0v6j   hdp_hdp2      replicated   1/1        mkenjis/ubhdpclu_img:latest   
-ni5xrb60u71i   hdp_hdp3      replicated   1/1        mkenjis/ubhdpclu_img:latest
+t3s7ud9u21hr   hdp_hdpmst    replicated      1/1        mkenjis/ubhdpclu_vol_img:latest   
+mi3w7xvf9vyt   hdp_hdp1      replicated      1/1        mkenjis/ubhdpclu_vol_img:latest   
+xlg5ww9q0v6j   hdp_hdp2      replicated      1/1        mkenjis/ubhdpclu_vol_img:latest   
+ni5xrb60u71i   hdp_hdp3      replicated      1/1        mkenjis/ubhdpclu_vol_img:latest
 ```
 
 5. access hadoop master node
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the hadoop master constainer
-CONTAINER ID   IMAGE                         COMMAND                  CREATED              STATUS              PORTS      NAMES
-d723786ae3e0   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   hadoop_hdp3.1.pmvvdxosgi2dkz7m8vi3i0x8t
-3895ee795371   mkenjis/ubhdpclu_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   hadoop_hdpmst.1.j04grga7ioelyt1vtr26h3fmr
+CONTAINER ID   IMAGE                             COMMAND                  CREATED              STATUS              PORTS      NAMES
+d723786ae3e0   mkenjis/ubhdpclu_vol_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   hadoop_hdp3.1.pmvvdxosgi2dkz7m8vi3i0x8t
+3895ee795371   mkenjis/ubhdpclu_vol_img:latest   "/usr/bin/supervisord"   About a minute ago   Up About a minute   9000/tcp   hadoop_hdpmst.1.j04grga7ioelyt1vtr26h3fmr
 
 $ docker container exec -it <hdpmst ID> bash
 ```
