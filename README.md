@@ -6,7 +6,6 @@ This Docker image contains Hadoop binaries prebuilt and uploaded in Docker Hub.
 
 ## Steps to Build Hadoop image
 ```shell
-$ git clone https://github.com/mkenjis/apache_binaries
 $ wget https://archive.apache.org/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 $ docker image build -t mkenjis/ubhdpclu_vol_img .
 $ docker login   # provide user and password

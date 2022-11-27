@@ -22,14 +22,14 @@ ssh-keyscan 0.0.0.0 >>~/.ssh/known_hosts
 
 if [ -n "${HADOOP_HOST_SLAVES}" ]; then
 
-   sleep 30
+   sleep 20
 
    create_conf_files.sh
 
    >${HADOOP_CONF_DIR}/slaves
 
    for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
-      ssh-keyscan ${HADOOP_HOST} >~/.ssh/known_hosts
+      ssh-keyscan ${HADOOP_HOST} >>~/.ssh/known_hosts
           scp ${HADOOP_CONF_DIR}/core-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/core-site.xml
           scp ${HADOOP_CONF_DIR}/hdfs-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hdfs-site.xml
           scp ${HADOOP_CONF_DIR}/mapred-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/mapred-site.xml
