@@ -25,13 +25,10 @@ VOLUME /hadoop/hdfs/namenode
 VOLUME /hadoop/hdfs/datanode
 
 COPY create_conf_files.sh .
-RUN chmod +x create_conf_files.sh
-
 COPY run_hadoop.sh .
-RUN chmod +x run_hadoop.sh
-
 COPY stop_hadoop.sh .
-RUN chmod +x stop_hadoop.sh
+
+RUN chmod +x create_conf_files.sh run_hadoop.sh stop_hadoop.sh
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
