@@ -21,10 +21,36 @@ ssh-keyscan ${HOSTNAME} >~/.ssh/known_hosts
 
 if [ -n "${HADOOP_HOST_SLAVES}" ]; then
 
-   sleep 20
+   # monitor if all hadoop slaves are available
+   # if so, proceed with hadoop slaves setup
+   hosts_OK=0
+   while [ ${hosts_OK} -eq 0 ]; do
 
+      result=0
+      for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
+         ssh -q root@${HADOOP_HOST} "echo 2>1" >/dev/null
+         result=$(echo $?)
+         # echo ${result}
+         if [ ${result} -ne 0 ]; then
+            echo ${HADOOP_HOST} 'not available'
+            sleep 2
+            break
+         fi
+      done
+
+      if [ ${result} -eq 0 ]; then
+         hosts_OK=1
+      else
+         hosts_OK=0
+      fi
+
+   done
+   # sleep 20
+
+   # create the hadoop conf files
    create_conf_files.sh
 
+   # copy the conf files to slaves
    >${HADOOP_CONF_DIR}/slaves
 
    for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
