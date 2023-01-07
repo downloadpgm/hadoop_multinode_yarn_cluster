@@ -78,3 +78,18 @@ if [ -n "${HADOOP_HOST_SLAVES}" ]; then
    $HADOOP_HOME/sbin/start-dfs.sh
    $HADOOP_HOME/sbin/start-yarn.sh
 fi
+# runs in case datanode being added to cluster
+if [ -n "${HADOOP_MASTER}" ]; then
+
+   # copy Hadoop config files from master
+   scp root@${HADOOP_MASTER}:${HADOOP_CONF_DIR}/core-site.xml ${HADOOP_CONF_DIR}
+   scp root@${HADOOP_MASTER}:${HADOOP_CONF_DIR}/hdfs-site.xml ${HADOOP_CONF_DIR}
+   scp root@${HADOOP_MASTER}:${HADOOP_CONF_DIR}/mapred-site.xml ${HADOOP_CONF_DIR}
+   scp root@${HADOOP_MASTER}:${HADOOP_CONF_DIR}/yarn-site.xml ${HADOOP_CONF_DIR}
+   scp root@${HADOOP_MASTER}:${HADOOP_CONF_DIR}/hadoop-env.sh ${HADOOP_CONF_DIR}
+
+   # start HDFS and YARN services
+   $HADOOP_HOME/sbin/hadoop-daemon.sh start datanode
+   $HADOOP_HOME/sbin/yarn-daemon.sh start nodemanager
+
+fi
