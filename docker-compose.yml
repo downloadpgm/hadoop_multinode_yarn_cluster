@@ -46,6 +46,18 @@ services:
       - data3:/hadoop/hdfs/datanode
     networks:
       - mynet
+#  hdp4:
+#    image: mkenjis/ubhdpclu_vol_img
+#    deploy:
+#      placement:
+#        constraints:
+#          - node.labels.hostlabel == hdpmst
+#    volumes:
+#      - data4:/hadoop/hdfs/datanode
+#    environment:
+#      - HADOOP_MASTER=hdpmst
+#    networks:
+#      - mynet
 
 networks:
   mynet:
@@ -55,3 +67,4 @@ volumes:
   data1:
   data2:
   data3:
+#  data4:

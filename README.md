@@ -298,3 +298,114 @@ $ hdfs dfs -cat /result/part-00000 | head -20
 "Software"),    5
 "Source"        1
 ```
+
+## Adding a DataNode to Hadoop cluster
+
+in hdpmst :
+```shell
+copy to new node
+> core-site.xml, 
+> hdfs-site.xml, 
+> mapred-site.xml, 
+> yarn-site.xml, 
+> hadoop-env.sh
+```
+
+in new node:
+```shell
+run 
+$ hadoop-daemon.sh start datanode
+$ yarn-daemon.sh start nodemanager
+```
+
+in hdpmst :
+- check new datanode (hdp4) added to HDP cluster:
+```shell
+
+$ hdfs dfsadmin -report
+23/01/07 15:10:55 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Configured Capacity: 147371851776 (137.25 GB)
+Present Capacity: 77290303488 (71.98 GB)
+DFS Remaining: 76683739136 (71.42 GB)
+DFS Used: 606564352 (578.46 MB)
+DFS Used%: 0.78%
+Under replicated blocks: 0
+Blocks with corrupt replicas: 0
+Missing blocks: 0
+Missing blocks (with replication factor 1): 0
+
+-------------------------------------------------
+Live datanodes (4):
+
+Name: 10.0.1.15:50010 (hdp_hdp4.1.psqz8ee5jxja62fv9a94rqzym.mynet)
+Hostname: 08f2305f6d7c
+Decommission Status : Normal
+Configured Capacity: 5000003584 (4.66 GB)
+DFS Used: 4096 (4 KB)
+Non DFS Used: 1037230080 (989.18 MB)
+DFS Remaining: 3962769408 (3.69 GB)
+DFS Used%: 0.00%
+DFS Remaining%: 79.26%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Sat Jan 07 15:10:56 CST 2023
+
+
+Name: 10.0.1.3:50010 (hdp_hdp2.1.ykf2ptsjtqmw7e89zmfffwu1x.mynet)
+Hostname: f5cb08c8a752
+Decommission Status : Normal
+Configured Capacity: 68685922304 (63.97 GB)
+DFS Used: 32735232 (31.22 MB)
+Non DFS Used: 34187227136 (31.84 GB)
+DFS Remaining: 34465959936 (32.10 GB)
+DFS Used%: 0.05%
+DFS Remaining%: 50.18%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Sat Jan 07 15:10:57 CST 2023
+
+
+Name: 10.0.1.12:50010 (hdp_hdp1.1.xg7nw6p77utzq4he1cnlwr5wm.mynet)
+Hostname: 87611be0019f
+Decommission Status : Normal
+Configured Capacity: 5000003584 (4.66 GB)
+DFS Used: 303276032 (289.23 MB)
+Non DFS Used: 907677696 (865.63 MB)
+DFS Remaining: 3789049856 (3.53 GB)
+DFS Used%: 6.07%
+DFS Remaining%: 75.78%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Sat Jan 07 15:10:54 CST 2023
+
+
+Name: 10.0.1.6:50010 (hdp_hdp3.1.cpyekeee5362n8b16p1y8qakt.mynet)
+Hostname: 117231c6a093
+Decommission Status : Normal
+Configured Capacity: 68685922304 (63.97 GB)
+DFS Used: 270548992 (258.02 MB)
+Non DFS Used: 33949413376 (31.62 GB)
+DFS Remaining: 34465959936 (32.10 GB)
+DFS Used%: 0.39%
+DFS Remaining%: 50.18%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Sat Jan 07 15:10:57 CST 2023
+
+```
