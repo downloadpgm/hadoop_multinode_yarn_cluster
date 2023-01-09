@@ -55,11 +55,11 @@ if [ -n "${HADOOP_HOST_SLAVES}" ]; then
 
    for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
       ssh-keyscan ${HADOOP_HOST} >>~/.ssh/known_hosts
-          scp ${HADOOP_CONF_DIR}/core-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/core-site.xml
-          scp ${HADOOP_CONF_DIR}/hdfs-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hdfs-site.xml
-          scp ${HADOOP_CONF_DIR}/mapred-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/mapred-site.xml
-          scp ${HADOOP_CONF_DIR}/yarn-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/yarn-site.xml
-          scp ${HADOOP_CONF_DIR}/hadoop-env.sh root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hadoop-env.sh
+      scp ${HADOOP_CONF_DIR}/core-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/core-site.xml
+      scp ${HADOOP_CONF_DIR}/hdfs-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hdfs-site.xml
+      scp ${HADOOP_CONF_DIR}/mapred-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/mapred-site.xml
+      scp ${HADOOP_CONF_DIR}/yarn-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/yarn-site.xml
+      scp ${HADOOP_CONF_DIR}/hadoop-env.sh root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hadoop-env.sh
 
       ssh root@${HADOOP_HOST} "cat /etc/hostname" >>${HADOOP_CONF_DIR}/slaves
    done
