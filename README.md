@@ -54,7 +54,12 @@ docker node update --label-add hostlabel=hdp2 node3
 docker node update --label-add hostlabel=hdp3 node4
 ```
 
-4. start hadoop namenode and datanodes 
+4. create an external "overlay" network in swarm to link the 2 stacks (hdp and spk)
+```shell
+docker network create --driver overlay mynet
+```
+
+5. start hadoop namenode and datanodes 
 ```shell
 $ docker stack deploy -c docker-compose.yml hdp
 $ docker service ls
@@ -65,7 +70,7 @@ xlg5ww9q0v6j   hdp_hdp2      replicated      1/1        mkenjis/ubhdpclu_vol_img
 ni5xrb60u71i   hdp_hdp3      replicated      1/1        mkenjis/ubhdpclu_vol_img:latest
 ```
 
-5. access hadoop master node
+6. access hadoop master node
 ```shell
 $ docker container ls   # run it in each node and check which <container ID> is running the hadoop master constainer
 CONTAINER ID   IMAGE                             COMMAND                  CREATED              STATUS              PORTS      NAMES
@@ -75,7 +80,7 @@ d723786ae3e0   mkenjis/ubhdpclu_vol_img:latest   "/usr/bin/supervisord"   About 
 $ docker container exec -it <hdpmst ID> bash
 ```
 
-6. check HDFS service
+7. check HDFS service
 ```shell
 $ hdfs dfsadmin -report
 Configured Capacity: 15000010752 (13.97 GB)
@@ -143,7 +148,7 @@ Xceivers: 1
 Last contact: Mon Dec 06 17:48:32 CST 2021
 ```
 
-7. create HDFS directory and copy files in this directory
+8. create HDFS directory and copy files in this directory
 ```shell
 $ hdfs dfs -ls /
 $ hdfs dfs -mkdir /data
@@ -172,7 +177,7 @@ Found 3 items
 -rw-r--r--   2 root supergroup       1366 2021-12-06 17:50 /data/README.txt
 ```
 
-8. copy mapper and reducer Python scripts
+9. copy mapper and reducer Python scripts
 ```shell
 $ cd ~  # return to home directory
 $ vi mapper.py
@@ -185,7 +190,7 @@ $ find $HADOOP_HOME -name '*streaming*'
 /usr/local/hadoop-2.7.3/share/hadoop/tools/sources/hadoop-streaming-2.7.3-test-sources.jar
 ```
 
-9. run the wordcount mapreduce example
+10. run the wordcount mapreduce example
 ```shell
 $ hadoop jar /usr/local/hadoop-2.7.3/share/hadoop/tools/lib/hadoop-streaming-2.7.3.jar -file mapper.py -mapper mapper.py -file reducer.py -reducer reducer.py -input /data -output /result
 21/12/06 17:57:07 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
@@ -265,7 +270,7 @@ packageJobJar: [mapper.py, reducer.py, /tmp/hadoop-unjar4647696537138809119/] []
 21/12/06 17:57:41 INFO streaming.StreamJob: Output directory: /result
 ```
 
-10. check HDFS result/part-00000 to view the output results.
+11. check HDFS result/part-00000 to view the output results.
 ```shell
 $ hdfs dfs -ls /                  
 Found 3 items

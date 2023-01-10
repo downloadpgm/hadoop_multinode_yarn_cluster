@@ -61,6 +61,8 @@ services:
 
 networks:
   mynet:
+    external:
+       name: mynet
 
 volumes:
   name0:
