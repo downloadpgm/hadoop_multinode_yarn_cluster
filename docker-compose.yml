@@ -12,10 +12,6 @@ services:
       - name0:/hadoop/hdfs/namenode
     networks:
       - mynet
-    environment:
-      - HADOOP_HOST_SLAVES=hdp1,hdp2,hdp3
-    depends_on:
-      - hdp1,hdp2,hdp3
   hdp1:
     image: mkenjis/ubhdpclu_vol_img
     deploy:
@@ -26,6 +22,8 @@ services:
       - data1:/hadoop/hdfs/datanode
     networks:
       - mynet
+    environment:
+      - HADOOP_MASTER=hdpmst
   hdp2:
     image: mkenjis/ubhdpclu_vol_img
     deploy:
@@ -36,6 +34,8 @@ services:
       - data2:/hadoop/hdfs/datanode
     networks:
       - mynet
+    environment:
+      - HADOOP_MASTER=hdpmst
   hdp3:
     image: mkenjis/ubhdpclu_vol_img
     deploy:
@@ -46,18 +46,8 @@ services:
       - data3:/hadoop/hdfs/datanode
     networks:
       - mynet
-#  hdp4:
-#    image: mkenjis/ubhdpclu_vol_img
-#    deploy:
-#      placement:
-#        constraints:
-#          - node.labels.hostlabel == hdpmst
-#    volumes:
-#      - data4:/hadoop/hdfs/datanode
-#    environment:
-#      - HADOOP_MASTER=hdpmst
-#    networks:
-#      - mynet
+    environment:
+      - HADOOP_MASTER=hdpmst
 
 networks:
   mynet:
@@ -69,4 +59,3 @@ volumes:
   data1:
   data2:
   data3:
-#  data4:
