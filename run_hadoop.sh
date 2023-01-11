@@ -75,6 +75,6 @@ if [ -n "${HADOOP_MASTER}" ]; then
    $HADOOP_HOME/sbin/hadoop-daemon.sh start datanode
    $HADOOP_HOME/sbin/yarn-daemon.sh start nodemanager
    
-   ssh root@${HADOOP_HOST} "cat /etc/hostname" >>${HADOOP_CONF_DIR}/slaves
+   ssh root@${HADOOP_MASTER} "echo ${HOSTNAME}" >>${HADOOP_CONF_DIR}/slaves
 
 fi
