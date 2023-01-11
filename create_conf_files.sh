@@ -5,10 +5,10 @@ echo '  <property>' >>$HADOOP_HOME/etc/hadoop/core-site.xml
 echo '    <name>fs.default.name</name>' >>$HADOOP_HOME/etc/hadoop/core-site.xml
 echo '    <value>hdfs://'${HOSTNAME}':9000</value>' >>$HADOOP_HOME/etc/hadoop/core-site.xml
 echo '  </property>' >>$HADOOP_HOME/etc/hadoop/core-site.xml
-echo '  <property>' >>$SPARK_HOME/conf/core-site.xml
-echo '    <name>hadoop.tmp.dir</name>' >>$SPARK_HOME/conf/core-site.xml
-echo '    <value>/root/hadoop/hdata</value>' >>$SPARK_HOME/conf/core-site.xml
-echo '  </property>' >>$SPARK_HOME/conf/core-site.xml
+echo '  <property>' >>$HADOOP_HOME/conf/core-site.xml
+echo '    <name>hadoop.tmp.dir</name>' >>$HADOOP_HOME/conf/core-site.xml
+echo '    <value>/root/hadoop/hdata</value>' >>$HADOOP_HOME/conf/core-site.xml
+echo '  </property>' >>$HADOOP_HOME/conf/core-site.xml
 echo '</configuration>' >>$HADOOP_HOME/etc/hadoop/core-site.xml
 
 # hdfs-site.xml (HADOOP e SPARK)
