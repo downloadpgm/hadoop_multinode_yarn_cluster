@@ -18,58 +18,17 @@ service ssh start
 echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
 ssh-keyscan ${HOSTNAME} >~/.ssh/known_hosts
 
-
-if [ -n "${HADOOP_HOST_SLAVES}" ]; then
-
-   # monitor if all hadoop slaves are available
-   # if so, proceed with hadoop slaves setup
-   hosts_OK=0
-   while [ ${hosts_OK} -eq 0 ]; do
-
-      result=0
-      for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
-         ssh -q root@${HADOOP_HOST} "echo 2>1" >/dev/null
-         result=$(echo $?)
-         # echo ${result}
-         if [ ${result} -ne 0 ]; then
-            echo ${HADOOP_HOST} 'not available'
-            sleep 2
-            break
-         fi
-      done
-
-      if [ ${result} -eq 0 ]; then
-         hosts_OK=1
-      else
-         hosts_OK=0
-      fi
-
-   done
-   # sleep 20
+# run block if hadoop master
+if [ -z "${HADOOP_MASTER}" ]; then
 
    # create the hadoop conf files
    create_conf_files.sh
 
-   # copy the conf files to slaves
+   # force slaves to be emptied
    >${HADOOP_CONF_DIR}/slaves
 
-   for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
-      ssh-keyscan ${HADOOP_HOST} >>~/.ssh/known_hosts
-      scp ${HADOOP_CONF_DIR}/core-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/core-site.xml
-      scp ${HADOOP_CONF_DIR}/hdfs-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hdfs-site.xml
-      scp ${HADOOP_CONF_DIR}/mapred-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/mapred-site.xml
-      scp ${HADOOP_CONF_DIR}/yarn-site.xml root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/yarn-site.xml
-      scp ${HADOOP_CONF_DIR}/hadoop-env.sh root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/hadoop-env.sh
-
-      ssh root@${HADOOP_HOST} "cat /etc/hostname" >>${HADOOP_CONF_DIR}/slaves
-   done
-
-   for HADOOP_HOST in `echo ${HADOOP_HOST_SLAVES} | tr ',' ' '`; do
-          scp ${HADOOP_CONF_DIR}/slaves root@${HADOOP_HOST}:${HADOOP_CONF_DIR}/slaves
-   done
-
    # if a new hadoop cluster, build a HDFS
-   # if a restart from previous hadoop cluster run, preserve HDFS
+   # if restarted from previous hadoop cluster run, preserve HDFS
    if [ ! -f /hadoop/hdfs/namenode/current/VERSION ]; then
      $HADOOP_HOME/bin/hdfs namenode -format
    fi
@@ -77,9 +36,31 @@ if [ -n "${HADOOP_HOST_SLAVES}" ]; then
    # start HDFS and YARN services
    $HADOOP_HOME/sbin/start-dfs.sh
    $HADOOP_HOME/sbin/start-yarn.sh
+   
+   echo "OK" >/root/masterOK
+   
 fi
-# runs in case datanode being added to cluster
+
+# run block if hadoop node or in case node being added to cluster
 if [ -n "${HADOOP_MASTER}" ]; then
+
+   # monitor until hadoop master is available
+   result=1
+   while [ ${result} -ne 0 ]; do
+      ssh -q root@${HADOOP_MASTER} "echo 2>1" >/dev/null
+      result=$(echo $?)
+      sleep 2
+   done
+   
+   # monitor if hadoop master started named and resourced daemons
+   result=1
+   while [ ${result} -ne 0 ]; do
+      ssh -q root@${HADOOP_MASTER} "cat masterOK" >/dev/null
+      result=$(echo $?)
+	  sleep 2
+   done
+   
+   # if OK, proceed with hadoop slaves setup
 
    # copy Hadoop config files from master
    scp root@${HADOOP_MASTER}:${HADOOP_CONF_DIR}/core-site.xml ${HADOOP_CONF_DIR}
@@ -91,5 +72,7 @@ if [ -n "${HADOOP_MASTER}" ]; then
    # start HDFS and YARN services
    $HADOOP_HOME/sbin/hadoop-daemon.sh start datanode
    $HADOOP_HOME/sbin/yarn-daemon.sh start nodemanager
+   
+   ssh root@${HADOOP_HOST} "cat /etc/hostname" >>${HADOOP_CONF_DIR}/slaves
 
 fi

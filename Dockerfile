@@ -15,6 +15,7 @@ RUN echo "" >>.bashrc \
  && echo 'export HADOOP_COMMON_HOME=$HADOOP_HOME' >>.bashrc \
  && echo 'export HADOOP_HDFS_HOME=$HADOOP_HOME' >>.bashrc \
  && echo 'export YARN_HOME=$HADOOP_HOME' >>.bashrc \
+ && echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >>.bashrc \
  && echo 'export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native' >>.bashrc \
  && echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >>.bashrc
 
