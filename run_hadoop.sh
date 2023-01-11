@@ -37,6 +37,8 @@ if [ -z "${HADOOP_MASTER}" ]; then
    $HADOOP_HOME/sbin/start-dfs.sh
    $HADOOP_HOME/sbin/start-yarn.sh
    
+   sleep 5 
+   
    echo "OK" >/root/masterOK
    
 fi
