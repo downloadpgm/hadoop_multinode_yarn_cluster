@@ -12,7 +12,10 @@ export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
 service ssh stop
 
-if [ -n "${HADOOP_HOST_SLAVES}" ]; then
+if [ -z "${HADOOP_MASTER}" ]; then
    $HADOOP_HOME/sbin/stop-yarn.sh
    $HADOOP_HOME/sbin/stop-dfs.sh
+   
+elif
+   ssh root@${HADOOP_MASTER} "grep -v ${HOSTNAME} ${HADOOP_CONF_DIR}/slaves >${HADOOP_CONF_DIR}/slaves"
 fi
