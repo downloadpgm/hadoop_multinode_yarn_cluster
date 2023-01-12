@@ -7,7 +7,7 @@ echo '    <value>hdfs://'${HOSTNAME}':9000</value>' >>$HADOOP_CONF_DIR/core-site
 echo '  </property>' >>$HADOOP_CONF_DIR/core-site.xml
 echo '  <property>' >>$HADOOP_CONF_DIR/core-site.xml
 echo '    <name>hadoop.tmp.dir</name>' >>$HADOOP_CONF_DIR/core-site.xml
-echo '    <value>/root/hadoop/hdata</value>' >>$HADOOP_CONF_DIR/core-site.xml
+echo '    <value>/hadoop/hdata</value>' >>$HADOOP_CONF_DIR/core-site.xml
 echo '  </property>' >>$HADOOP_CONF_DIR/core-site.xml
 echo '</configuration>' >>$HADOOP_CONF_DIR/core-site.xml
 

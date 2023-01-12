@@ -24,7 +24,7 @@ if [ -z "${HADOOP_MASTER}" ]; then
    # create the hadoop conf files
    create_conf_files.sh
 
-   # force slaves to be emptied
+   # force slaves file to be emptied
    [ "${HADOOP_MULTINODE}" == "yes" ] && >${HADOOP_CONF_DIR}/slaves
 
    # if a new hadoop cluster, build a HDFS
