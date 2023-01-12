@@ -49,7 +49,7 @@ if [ -n "${HADOOP_MASTER}" ]; then
    # monitor until hadoop master is available
    result=1
    while [ ${result} -ne 0 ]; do
-      ssh -q root@${HADOOP_MASTER} "echo 2>1" >/dev/null
+      ssh -q root@${HADOOP_MASTER} "echo 2>&1 >/dev/null"
       result=$(echo $?)
       sleep 2
    done
