@@ -12,6 +12,8 @@ services:
       - name0:/hadoop/hdfs/namenode
     networks:
       - mynet
+    environment:
+      - HADOOP_MULTINODE=yes
   hdp1:
     image: mkenjis/ubhdpclu_vol_img
     deploy:

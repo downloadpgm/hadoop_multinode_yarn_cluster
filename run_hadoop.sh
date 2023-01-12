@@ -25,7 +25,7 @@ if [ -z "${HADOOP_MASTER}" ]; then
    create_conf_files.sh
 
    # force slaves to be emptied
-   >${HADOOP_CONF_DIR}/slaves
+   [ "${HADOOP_MULTINODE}" == "yes" ] && >${HADOOP_CONF_DIR}/slaves
 
    # if a new hadoop cluster, build a HDFS
    # if restarted from previous hadoop cluster run, preserve HDFS
@@ -75,6 +75,6 @@ if [ -n "${HADOOP_MASTER}" ]; then
    $HADOOP_HOME/sbin/hadoop-daemon.sh start datanode
    $HADOOP_HOME/sbin/yarn-daemon.sh start nodemanager
    
-   ssh root@${HADOOP_MASTER} "echo ${HOSTNAME}" >>${HADOOP_CONF_DIR}/slaves
+   ssh root@${HADOOP_MASTER} "echo ${HOSTNAME} >>${HADOOP_CONF_DIR}/slaves"
 
 fi
