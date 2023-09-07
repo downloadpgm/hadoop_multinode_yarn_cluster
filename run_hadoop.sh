@@ -78,3 +78,7 @@ if [ -n "${HADOOP_MASTER}" ]; then
    ssh root@${HADOOP_MASTER} "echo ${HOSTNAME} >>${HADOOP_CONF_DIR}/slaves"
 
 fi
+
+while [ true ]; do 
+   sleep 15
+done
