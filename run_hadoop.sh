@@ -15,8 +15,8 @@ export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
 service ssh start
 
-echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-ssh-keyscan ${HOSTNAME} >~/.ssh/known_hosts
+echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > /root/.ssh/config
+ssh-keyscan ${HOSTNAME} > /root/.ssh/known_hosts
 
 # run block if hadoop master
 if [ -z "${HADOOP_MASTER}" ]; then
@@ -79,6 +79,3 @@ if [ -n "${HADOOP_MASTER}" ]; then
 
 fi
 
-while [ true ]; do 
-   sleep 15
-done

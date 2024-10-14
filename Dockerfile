@@ -31,8 +31,8 @@ COPY stop_hadoop.sh .
 
 RUN chmod +x create_conf_files.sh run_hadoop.sh stop_hadoop.sh
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+#COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 9000
 
-CMD ["/usr/bin/supervisord"]
+CMD /bin/bash -c "/root/run_hadoop.sh"; sleep infinity
